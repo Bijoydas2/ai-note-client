@@ -46,4 +46,31 @@ export const mockNotes: Note[] = [
     createdAt: "1/11/2024",
     summary: "Summary of key concepts from Atomic Habits book.",
   },
+  {
+    id: "5",
+    title: "Book Notes: Atomic Habits",
+    content:
+      "Key takeaways from James Clear's book on habit formation. The 1% better principle, habit stacking, and environment design for success.",
+    category: "Personal",
+    createdAt: "1/11/2024",
+    summary: "Summary of key concepts from Atomic Habits book.",
+  },
+  {
+    id: "6",
+    title: "Book Notes: Atomic Habits",
+    content:
+      "Key takeaways from James Clear's book on habit formation. The 1% better principle, habit stacking, and environment design for success.",
+    category: "Personal",
+    createdAt: "1/11/2024",
+    summary: "Summary of key concepts from Atomic Habits book.",
+  },
+  {
+    id: "7",
+    title: "Book Notes: Atomic Habits",
+    content:
+      "Key takeaways from James Clear's book on habit formation. The 1% better principle, habit stacking, and environment design for success.",
+    category: "Personal",
+    createdAt: "1/11/2024",
+    summary: "Summary of key concepts from Atomic Habits book.",
+  },
 ];
