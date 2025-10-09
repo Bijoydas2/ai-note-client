@@ -6,6 +6,7 @@ import { mockNotes } from "../data/mockNotes";
 import { Sidebar } from "../Components/sidebar";
 import { NoteCard } from "../Components/NoteCard";
 import { Navbar } from "../Components/Navbar";
+import { Link } from "react-router";
 
 export const Dashboard: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
@@ -72,9 +73,8 @@ export const Dashboard: React.FC = () => {
         {/* Sidebar */}
         <aside
           ref={sidebarRef}
-          className={`fixed md:sticky top-[64px] left-0 z-40 h-[calc(100vh-64px)] w-64 bg-[#101b29] transition-transform duration-300 transform ${
-            sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-          }`}
+          className={`fixed md:sticky top-[64px] left-0 z-40 h-[calc(100vh-64px)] w-64 bg-[#101b29] transition-transform duration-300 transform ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+            }`}
         >
           <Sidebar
             categories={categories}
@@ -104,11 +104,14 @@ export const Dashboard: React.FC = () => {
               </p>
             </div>
 
-            <Button
-              className="p-button-rounded bg-white text-black hover:bg-gray-200 transition-all"
-              icon={<Plus size={18} />}
-              label="New Note"
-            />
+            <Link to="/new">
+              <Button
+                className="p-button-rounded bg-white text-black px-4 py-2 rounded-xl hover:bg-gray-200 transition-all flex items-center gap-2"
+                icon={<Plus size={18} />}
+                label="New Note"
+
+              />
+            </Link>
           </div>
 
           {/* Notes Grid */}
@@ -123,6 +126,7 @@ export const Dashboard: React.FC = () => {
               <p>No notes found matching your criteria.</p>
             </div>
           )}
+         
         </main>
       </div>
     </div>

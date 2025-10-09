@@ -73,7 +73,7 @@ export const RegisterPage: React.FC = () => {
         </div>
 
         <h3 className="text-xl font-semibold text-center text-white mb-6">
-          Create Account ✨
+          Create Account 
         </h3>
 
         {/* Form */}

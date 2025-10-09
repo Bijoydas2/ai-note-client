@@ -48,7 +48,7 @@ export const LoginPage: React.FC = () => {
         </div>
 
         <h3 className="text-xl font-semibold text-center text-white mb-6">
-          Welcome Back 👋
+          Welcome Back 
         </h3>
 
         {/* Form */}
