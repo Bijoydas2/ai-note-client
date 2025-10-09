@@ -5,6 +5,8 @@ import Dashboard from "../Layout/Dashboard";
 import { LoginPage } from "../Page/Login";
 import { RegisterPage } from "../Page/Register";
 import NewNote from "../Page/Dashboard/NewNote";
+import { NoteView } from "../Page/Dashboard/NoteView";
+import UpdateNote from "../Page/Dashboard/UpdateNote";
 
 
 
@@ -33,6 +35,14 @@ export const router = createBrowserRouter([
   {
     path: "/new",
     element: <NewNote />
+  },
+  {
+    path: "/update/:id",
+    element: <UpdateNote />
+  },
+  {
+   path:"/note/:id" ,
+   element:<NoteView/>
   }
 ]);
 

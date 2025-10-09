@@ -1,6 +1,5 @@
-// src/components/Sidebar.tsx
 import React from "react";
-import { BookOpen, Briefcase, Lightbulb, Calendar, Search } from "lucide-react";
+import { BookOpen, Briefcase, Lightbulb, Calendar, Search, FileText } from "lucide-react";
 
 type Props = {
   categories: { name: string; count: number }[];
@@ -9,6 +8,16 @@ type Props = {
 };
 
 export const Sidebar: React.FC<Props> = ({ categories, selected, onSelect }) => {
+
+  const categoryIcons: Record<string, React.ReactNode> = {
+    All: <Search />,
+    Work: <Briefcase />,
+    Personal: <BookOpen />,
+    Ideas: <Lightbulb />,
+    Meeting: <Calendar />,
+    Research: <FileText />,
+  };
+
   return (
     <aside className="w-64 bg-[#0e2430] text-white min-h-[calc(100vh-64px)] p-6 border-r border-[#12202b]">
       <h3 className="text-lg font-bold mb-6">Categories</h3>
@@ -22,9 +31,7 @@ export const Sidebar: React.FC<Props> = ({ categories, selected, onSelect }) => 
             >
               <div className="flex items-center gap-3">
                 {/* icon by category */}
-                <span className="opacity-80">
-                  {c.name === "All" ? <Search /> : c.name === "Work" ? <Briefcase /> : c.name === "Personal" ? <BookOpen /> : <Lightbulb />}
-                </span>
+                <span className="opacity-80">{categoryIcons[c.name] || <Lightbulb />}</span>
                 <span className="text-left">{c.name}</span>
               </div>
               <span className="bg-[#122031] text-gray-300 px-2 py-0.5 rounded-full text-sm">{c.count}</span>
