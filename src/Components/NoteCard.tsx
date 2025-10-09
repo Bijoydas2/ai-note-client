@@ -4,6 +4,7 @@ import { Button } from "primereact/button";
 import { MoreVertical, Eye, Edit2, Trash2 } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
+import Loading from "../Page/Loading";
 
 const API = "http://localhost:5000"; 
 
@@ -64,7 +65,7 @@ export const NoteCard: React.FC<Props> = ({ selectedCategory = "All", search = "
     return matchesCategory && matchesSearch;
   });
 
-  if (isLoading) return <p className="text-gray-400 text-center">Loading notes...</p>;
+  if (isLoading) return <Loading message="Loading notes..."/>;
   if (!filteredNotes.length) return <p className="text-gray-400 text-center">No notes found.</p>;
 
   return (
