@@ -7,7 +7,6 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { Loader2 } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 
-
 const API = "http://localhost:5000";
 
 export const NewNote: React.FC = () => {
@@ -15,6 +14,7 @@ export const NewNote: React.FC = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState<string | null>(null);
+  const [summary, setSummary] = useState<string>("");
 
   const categories = [
     { label: "Work", value: "Work" },
@@ -24,7 +24,7 @@ export const NewNote: React.FC = () => {
     { label: "Meeting", value: "Meeting" },
   ];
 
-  // → AI Suggest Title
+  // AI Suggest Title
   const suggestTitleMutation = useMutation({
     mutationFn: async () => {
       const res = await fetch(`${API}/api/gemini/suggest-title`, {
@@ -38,7 +38,7 @@ export const NewNote: React.FC = () => {
     onSuccess: (data) => setTitle(data.title || ""),
   });
 
-  // → AI Summarize
+  //  AI Summarize
   const summarizeMutation = useMutation({
     mutationFn: async () => {
       const res = await fetch(`${API}/api/gemini/summarize`, {
@@ -49,17 +49,19 @@ export const NewNote: React.FC = () => {
       if (!res.ok) throw new Error("Failed to summarize");
       return res.json();
     },
-    onSuccess: (data) =>
-      setContent((prev) => prev + "\n\n---\n🧠 Summary:\n" + (data.summary || "")),
+    onSuccess: (data) => {
+      setSummary(data.summary || "");
+      setContent((prev) => prev + "\n\n---\n🧠 Summary:\n" + (data.summary || ""));
+    },
   });
 
-  // → Save note to backend
+  // Save note to backend
   const saveNoteMutation = useMutation({
     mutationFn: async () => {
       const res = await fetch(`${API}/api/notes`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, content, category }),
+        body: JSON.stringify({ title, content, category, summary }),
       });
       if (!res.ok) throw new Error("Failed to save note");
       return res.json();

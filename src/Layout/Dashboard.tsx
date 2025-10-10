@@ -7,7 +7,7 @@ import { NoteCard, Note } from "../Components/NoteCard";
 import { Navbar } from "../Components/Navbar";
 import { Link } from "react-router";
 
-const API = "http://localhost:5000"; // তোমার backend URL
+const API = "http://localhost:5000"; 
 
 export const Dashboard: React.FC = () => {
   const [notes, setNotes] = useState<Note[]>([]);
