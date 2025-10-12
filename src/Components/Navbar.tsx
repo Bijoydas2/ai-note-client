@@ -20,7 +20,7 @@ export const Navbar: React.FC<Props> = ({ search, onSearch, onToggleDark, dark }
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown if clicked outside
+  
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -53,8 +53,7 @@ export const Navbar: React.FC<Props> = ({ search, onSearch, onToggleDark, dark }
           <span className="text-white font-bold text-sm lg:text-xl md:text-xl">AI Notes</span>
         </Link>
       </div>
-
-      {/* Center: Search */}
+     {/* center */}
       <div className="w-full md:max-w-lg  mt-2 md:mt-0">
         <div className="relative w-full">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -67,7 +66,7 @@ export const Navbar: React.FC<Props> = ({ search, onSearch, onToggleDark, dark }
         </div>
       </div>
 
-      {/* Right: Theme + Profile/Login */}
+      {/* Right: Profile/Login */}
       <div className="flex items-center justify-end gap-3 w-full md:w-auto mt-2 md:mt-0 relative">
         
         <button
@@ -88,7 +87,7 @@ export const Navbar: React.FC<Props> = ({ search, onSearch, onToggleDark, dark }
           </Link>
         ) : (
           <div className="relative" ref={dropdownRef}>
-            {/* Profile Avatar */}
+           
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
               className="w-9 h-9 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center focus:outline-none"

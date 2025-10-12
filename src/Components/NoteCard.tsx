@@ -1,12 +1,14 @@
-
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Button } from "primereact/button";
 import { MoreVertical, Eye, Edit2, Trash2, Pin, PinOff } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import Loading from "../Page/Loading";
+import { AuthContext } from "../Context/AuthProvider";
+import ErrorPage from "../Page/ErrorPage";
+import { toast } from "react-toastify";
 
-const API = "http://localhost:5000";
+const API = "https://ai-note-server-1.onrender.com";
 
 export type Note = {
 
@@ -26,6 +28,7 @@ type Props = {
 export const NoteCard: React.FC<Props> = ({ selectedCategory = "All", search = "" }) => {
   const queryClient = useQueryClient();
   const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
+  const {user}= useContext(AuthContext)
   const navigate = useNavigate();
 
   const categoryColors: Record<string, string> = {
@@ -37,33 +40,62 @@ export const NoteCard: React.FC<Props> = ({ selectedCategory = "All", search = "
   };
 
   //get all
-  const { data: notes = [], isLoading } = useQuery<Note[]>({
-    queryKey: ["notes"],
-    queryFn: async () => {
-      const res = await fetch(`${API}/api/notes`);
-      if (!res.ok) throw new Error("Failed to fetch notes");
-      return res.json();
-    },
-  });
+const { data: notes = [], isLoading } = useQuery<Note[]>({
+  queryKey: ["notes"],
+  queryFn: async () => {
+   
+    const token = await user.getIdToken(); 
+    const res = await fetch(`${API}/api/notes`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!res.ok) {
+      const error = await res.json();
+      throw new Error(error.message || "Failed to fetch notes");
+    }
+    return res.json(); 
+  },
+  enabled: !!user,
+});
+
+
 
   // Delete mutation
   const deleteMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const res = await fetch(`${API}/api/notes/${id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Delete failed");
-      return res.json();
-    },
-    onSuccess: () => queryClient.invalidateQueries(["notes"]),
-  });
+  mutationFn: async (id: string) => {
+    const token = await user.getIdToken();
+    const res = await fetch(`${API}/api/notes/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!res.ok) throw new Error("Failed to delete note");
+    return res.json();
+  },
+  onSuccess: () => {
+    queryClient.invalidateQueries(["notes"]);
+    toast.success("🗑️ Note deleted successfully!");
+  },
+  onError: (error) => {
+    console.error("Delete error:", error);
+    toast.error("❌ Failed to delete note. Please try again.");
+  },
+});
 
   // Pin/unpin mutation with optimistic update
   const pinMutation = useMutation({
     mutationFn: async ({ id, pinned }: { id: string; pinned: boolean }) => {
+      const token = await user.getIdToken();
       const res = await fetch(`${API}/api/notes/pin/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pinned }),
-      });
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ pinned }),
+    });
       if (!res.ok) throw new Error("Failed to toggle pin");
       return res.json();
     },
@@ -88,7 +120,7 @@ export const NoteCard: React.FC<Props> = ({ selectedCategory = "All", search = "
   });
 
   if (isLoading) return <Loading message="Loading notes..." />;
-  if (!notes.length) return <p className="text-gray-400 text-center">No notes found.</p>;
+  if (!notes.length) return <ErrorPage message="not found page"/>;
 
   // Filter 
   const filteredNotes = notes
@@ -106,12 +138,14 @@ export const NoteCard: React.FC<Props> = ({ selectedCategory = "All", search = "
       {filteredNotes.map((note) => (
         <div
           key={note._id}
-          className="relative bg-[#0b1220] text-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-transform transform hover:scale-[1.03] border border-[#122036]"
+          className="relative bg-[#0b1220] text-white p-6  rounded-2xl shadow-md hover:shadow-xl transition-transform transform hover:scale-[1.03] border border-[#122036]"
         >
           {/* Header */}
           <div className="flex justify-between items-start mb-3">
             <div>
-              <h3 className="text-xl font-semibold mb-2">{note.title}</h3>
+              <h3 className="text-xl font-semibold mb-4">
+                 {note.title.length > 100 ? note.title.slice(0, 100) + "..." : note.title}
+                </h3>
               <div className="flex items-center gap-3 text-sm">
                 <span
                   className={`px-3 py-1 rounded-full text-xs font-medium ${
@@ -182,23 +216,22 @@ export const NoteCard: React.FC<Props> = ({ selectedCategory = "All", search = "
             </div>
           </div>
 
-          {/* Content snippet */}
+         
           <p className="text-gray-300 mb-3">
             {note.content.length > 160 ? note.content.slice(0, 160) + "..." : note.content}
           </p>
 
-          {/* Bottom Buttons */}
           <div className="flex gap-2 mt-2">
             <Button
               icon={<Eye />}
               label="View"
-              className="p-button-outlined"
+              className="p-button-outlined bg-gray-900 hover:bg-gray-700 p-2 rounded-2xl"
               onClick={() => navigate(`/note/${note._id}`)}
             />
             <Button
               icon={<Edit2 />}
               label="Edit"
-              className="p-button-outlined"
+              className="p-button-outlined bg-gray-900 hover:bg-gray-700 p-2 rounded-2xl "
               onClick={() => navigate(`/update/${note._id}`)}
             />
           </div>

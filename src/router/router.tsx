@@ -7,43 +7,52 @@ import { RegisterPage } from "../Page/Register";
 import NewNote from "../Page/Dashboard/NewNote";
 import { NoteView } from "../Page/Dashboard/NoteView";
 import UpdateNote from "../Page/Dashboard/UpdateNote";
-
-
-
-
-
+import PrivateRoute from "../Route/PrivateRoute";
+import ErrorPage from "../Page/ErrorPage";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <Home />
+    element: <Home />,
   },
   {
-    path: '/login',
-    element: <LoginPage />
+    path: "/login",
+    element: <LoginPage />,
   },
   {
     path: "/register",
-    element: <RegisterPage />
-
+    element: <RegisterPage />,
   },
   {
     path: "/dashboard",
     element: <Dashboard />,
-
   },
   {
     path: "/new",
-    element: <NewNote />
+    element: (
+      <PrivateRoute>
+        <NewNote />
+      </PrivateRoute>
+    ),
   },
   {
     path: "/update/:id",
-    element: <UpdateNote />
+    element: (
+      <PrivateRoute>
+        <UpdateNote />
+      </PrivateRoute>
+    ),
   },
   {
-   path:"/note/:id" ,
-   element:<NoteView/>
+    path: "/note/:id",
+    element: (
+      <PrivateRoute>
+        <NoteView />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path:'/*',
+    element:<ErrorPage code={404} message="Page Not Found"/>
   }
 ]);
-
-

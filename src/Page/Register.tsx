@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../Context/AuthProvider";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import {  toast } from "react-toastify";
 
 
@@ -25,8 +25,10 @@ type FormData = {
 export const RegisterPage: React.FC = () => {
   const { signup, googleLogin } = useContext(AuthContext)!;
   const navigate = useNavigate();
+  const location = useLocation();
   const [showPassword, setShowPassword] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
+  const from=location.state || "/dashboard";
 
   const {
     register,
@@ -38,7 +40,7 @@ export const RegisterPage: React.FC = () => {
     try {
       await signup(data.email, data.password);
       toast.success("Account created successfully!");
-      setTimeout(() => navigate("/dashboard"), 500);
+      setTimeout(() => navigate(from), 500);
     } catch (err: any) {
       toast.error(err.message || "Registration failed");
     }
@@ -48,7 +50,7 @@ export const RegisterPage: React.FC = () => {
     try {
       await googleLogin();
       toast.success("Google account connected!");
-      setTimeout(() => navigate("/dashboard"), 500);
+      setTimeout(() => navigate(from), 500);
     } catch (err: any) {
       toast.error(err.message || "Google registration failed");
     }
@@ -177,7 +179,7 @@ export const RegisterPage: React.FC = () => {
           </button>
         </form>
 
-        {/* OR Divider */}
+        
         <div className="flex items-center my-5">
           <hr className="flex-1 border-gray-600" />
           <span className="mx-2 text-gray-400">OR</span>

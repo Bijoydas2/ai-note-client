@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Mail, Lock, LogIn, User, Brain } from "lucide-react";
-import { useNavigate, Link } from "react-router";
+import { useNavigate, Link, useLocation } from "react-router";
 import { AuthContext } from "../Context/AuthProvider";
 import { toast } from "react-toastify";
 
@@ -11,15 +11,17 @@ type FormData = {
 };
 
 export const LoginPage: React.FC = () => {
+  const location=useLocation();
   const { register, handleSubmit } = useForm<FormData>();
   const { loginUser, googleLogin } = useContext(AuthContext);
+  const from=location.state || "/dashboard";
   const navigate = useNavigate();
 
   const onSubmit = async (data: FormData) => {
     try {
       await loginUser(data.email, data.password);
       toast.success("Login successful!");
-      navigate("/dashboard");
+      navigate(from);
     } catch (err: any) {
       toast.error(err.message || "Login failed");
     }
@@ -29,7 +31,7 @@ export const LoginPage: React.FC = () => {
     try {
       await googleLogin();
       toast.success("Google login successful!");
-      navigate("/dashboard");
+      navigate(from);
     } catch (err: any) {
       toast.error(err.message || "Google login failed");
     }

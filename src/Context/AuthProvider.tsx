@@ -43,40 +43,42 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // 🔹 Email/Password Signup
+  //  Email/Password Signup
   const signup = async (email: string, password: string): Promise<User | null> => {
     const result = await createUserWithEmailAndPassword(auth, email, password);
     return result.user;
   };
 
-  // 🔹 Email/Password Login
+  //  Email/Password Login
   const loginUser = async (email: string, password: string): Promise<User | null> => {
     const result = await signInWithEmailAndPassword(auth, email, password);
     return result.user;
   };
 
-  // 🔹 Google Login
+  //  Google Login
   const googleProvider = new GoogleAuthProvider();
   const googleLogin = async (): Promise<User | null> => {
     const result = await signInWithPopup(auth, googleProvider);
     return result.user;
   };
 
-  // 🔹 Logout
+  //  Logout
   const logOut = async (): Promise<void> => {
     await signOut(auth);
   };
 
-  // 🔹 Auth State Change Listener
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
-    });
+  // Auth State Change Listener
+useEffect(()=>{
+  const unsubscribe = onAuthStateChanged(auth,currentUser=>{
+    setUser(currentUser);
+    setLoading(false)
+    
+  })
+  return ()=> {
+    unsubscribe();
+  }
 
-    return () => unsubscribe();
-  }, []);
-
+},[])
   const authInfo: AuthContextType = {
     signup,
     loginUser,

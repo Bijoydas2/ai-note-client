@@ -1,39 +1,44 @@
 // src/pages/Dashboard.tsx
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { Button } from "primereact/button";
 import { Plus, Menu } from "lucide-react";
 import { Sidebar } from "../Components/sidebar";
 import { NoteCard, Note } from "../Components/NoteCard";
 import { Navbar } from "../Components/Navbar";
 import { Link } from "react-router";
+import { AuthContext } from "../Context/AuthProvider";
 
-const API = "http://localhost:5000"; 
 
 export const Dashboard: React.FC = () => {
-  const [notes, setNotes] = useState<Note[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [search, setSearch] = useState<string>("");
   const [dark, setDark] = useState<boolean>(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
-  const [loading, setLoading] = useState<boolean>(false);
 
-  // Fetch notes from backend
+  const { user } = useContext(AuthContext);
+
+  // Sidebar categories placeholder
+  const [notes, setNotes] = useState<Note[]>([]);
+
+  // Fetch notes whenever user is available
   useEffect(() => {
     const fetchNotes = async () => {
-      setLoading(true);
+      if (!user) return;
       try {
-        const res = await fetch(`${API}/api/notes`);
+        const token = await user.getIdToken();
+        const res = await fetch("https://ai-note-server-1.onrender.com/api/notes", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         const data = await res.json();
-        setNotes(data);
+        setNotes(Array.isArray(data) ? data : []);
       } catch (err) {
-        console.error("Failed to fetch notes:", err);
-      } finally {
-        setLoading(false);
+        console.error(err);
+        setNotes([]);
       }
     };
     fetchNotes();
-  }, []);
+  }, [user]);
 
   // Sidebar categories with count
   const categories = React.useMemo(() => {
@@ -45,21 +50,20 @@ export const Dashboard: React.FC = () => {
   }, [notes]);
 
   // Filtered notes
-  const filteredNotes = notes.filter((n) => {
-    const matchesCategory = selectedCategory === "All" || n.category === selectedCategory;
-    const q = search.trim().toLowerCase();
-    const matchesSearch =
-      !q ||
-      n.title.toLowerCase().includes(q) ||
-      n.content.toLowerCase().includes(q);
-    return matchesCategory && matchesSearch;
-  });
+  const filteredNotes = React.useMemo(() => {
+    return notes.filter((n) => {
+      const matchesCategory = selectedCategory === "All" || n.category === selectedCategory;
+      const q = search.trim().toLowerCase();
+      const matchesSearch =
+        !q || n.title.toLowerCase().includes(q) || n.content.toLowerCase().includes(q);
+      return matchesCategory && matchesSearch;
+    });
+  }, [notes, selectedCategory, search]);
 
   // Dark mode toggle
   useEffect(() => {
-    const root = window.document.documentElement;
-    if (dark) root.classList.add("dark");
-    else root.classList.remove("dark");
+    const root = document.documentElement;
+    dark ? root.classList.add("dark") : root.classList.remove("dark");
   }, [dark]);
 
   // Close sidebar on outside click
@@ -75,7 +79,7 @@ export const Dashboard: React.FC = () => {
 
   const handleSelectCategory = (category: string) => {
     setSelectedCategory(category);
-    setSidebarOpen(false); // close sidebar on mobile
+    setSidebarOpen(false);
   };
 
   return (
@@ -110,9 +114,7 @@ export const Dashboard: React.FC = () => {
           <div className="flex items-start justify-between mb-6">
             <div>
               <h2 className="text-2xl font-bold">{selectedCategory === "All" ? "All Notes" : selectedCategory}</h2>
-              <p className="text-gray-400 mt-1">
-                {filteredNotes.length} {filteredNotes.length === 1 ? "note" : "notes"}
-              </p>
+              <p className="text-gray-400 mt-1">{filteredNotes.length} {filteredNotes.length === 1 ? "note" : "notes"}</p>
             </div>
 
             <Link to="/new">
@@ -125,12 +127,14 @@ export const Dashboard: React.FC = () => {
           </div>
 
           {/* Notes Grid */}
-          {loading ? (
-            <p className="text-gray-400 text-center">Loading notes...</p>
-          ) : filteredNotes.length === 0 ? (
-            <p className="text-gray-400 text-center">No notes found.</p>
-          ) : (
+           {filteredNotes.length > 0 ? (
             <NoteCard selectedCategory={selectedCategory} search={search} />
+          ) : (
+            <div className="mt-20 text-center text-gray-400 text-lg">
+              {selectedCategory === "All"
+                ? "Create your first Note"
+                : `No notes in "${selectedCategory}" category.`}
+            </div>
           )}
         </main>
       </div>

@@ -1,16 +1,20 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 import { InputTextarea } from "primereact/inputtextarea";
-import { Loader2 } from "lucide-react";
+import { FileText, Loader2 } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import { AuthContext } from "../../Context/AuthProvider";
+import Loading from "../Loading";
 
-const API = "http://localhost:5000";
+const API = "https://ai-note-server-1.onrender.com";
 
 export const NewNote: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState<string | null>(null);
@@ -24,7 +28,7 @@ export const NewNote: React.FC = () => {
     { label: "Meeting", value: "Meeting" },
   ];
 
-  // AI Suggest Title
+  // --- AI Suggest Title ---
   const suggestTitleMutation = useMutation({
     mutationFn: async () => {
       const res = await fetch(`${API}/api/gemini/suggest-title`, {
@@ -35,10 +39,14 @@ export const NewNote: React.FC = () => {
       if (!res.ok) throw new Error("Failed to suggest title");
       return res.json();
     },
-    onSuccess: (data) => setTitle(data.title || ""),
+    onSuccess: (data) => {
+      setTitle(data.title || "");
+      toast.success("AI suggested a title!");
+    },
+    onError: () => toast.error("AI failed to suggest title."),
   });
 
-  //  AI Summarize
+  // --- AI Summarize ---
   const summarizeMutation = useMutation({
     mutationFn: async () => {
       const res = await fetch(`${API}/api/gemini/summarize`, {
@@ -51,64 +59,97 @@ export const NewNote: React.FC = () => {
     },
     onSuccess: (data) => {
       setSummary(data.summary || "");
-      setContent((prev) => prev + "\n\n---\n🧠 Summary:\n" + (data.summary || ""));
+      setContent(
+        (prev) =>
+          prev + "\n\n---\n🧠 Summary:\n" + (data.summary || "No summary found")
+      );
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      toast.success("Summary generated successfully!");
     },
+    onError: () => toast.error("AI failed to summarize your note."),
   });
 
-  // Save note to backend
+  // --- Save Note ---
   const saveNoteMutation = useMutation({
     mutationFn: async () => {
+      const token = await user.getIdToken();
       const res = await fetch(`${API}/api/notes`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({ title, content, category, summary }),
       });
       if (!res.ok) throw new Error("Failed to save note");
       return res.json();
     },
-    onSuccess: () => navigate("/dashboard"),
+    onSuccess: () => {
+      toast.success(" Note saved successfully!");
+      navigate("/dashboard");
+    },
+    onError: () => toast.error(" Failed to save note."),
   });
 
-  const isLoading = suggestTitleMutation.isPending || summarizeMutation.isPending;
+  const isProcessing =
+    saveNoteMutation.isPending ||
+    suggestTitleMutation.isPending ||
+    summarizeMutation.isPending;
+
+  if (isProcessing && !saveNoteMutation.isPending && !suggestTitleMutation.isPending && !summarizeMutation.isPending) {
+    return <Loading message="Processing your note..." />;
+  }
 
   const handleSave = () => {
     if (!title || !content || !category) {
-      alert("Please fill all fields");
+      toast.warn("Please fill all fields before saving.");
       return;
     }
     saveNoteMutation.mutate();
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0e1420] to-[#111b2e] text-white px-6 py-8 flex justify-center">
+    <div className="min-h-screen bg-gradient-to-b from-[#0e1420] to-[#111b2e] text-white px-6 py-8 flex justify-center transition-opacity duration-500">
       <div className="w-full max-w-6xl">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <Link to="/dashboard" className="text-gray-400 hover:text-white">
             ← Back
           </Link>
-          <h2 className="text-2xl hidden md:block lg:block font-semibold tracking-wide text-center flex-1">
-            📝 Create a New Note
+          <h2 className="text-xl text-center hidden md:flex mb-2 font-semibold tracking-wide lg:flex items-center justify-center gap-2">
+            <FileText className="w-5 h-5" />
+            Create a New Note
           </h2>
           <div className="flex gap-3">
             <Button
               label="Cancel"
               className="bg-gray-700 text-white border-none px-5 py-2 rounded-xl hover:bg-gray-600"
               onClick={() => navigate("/dashboard")}
+              disabled={isProcessing}
             />
             <Button
-              label="Save"
+              label={saveNoteMutation.isPending ? "Saving..." : "Save"}
               icon="pi pi-save"
-              className="bg-blue-500 text-white border-none px-5 py-2 rounded-xl hover:bg-blue-600 font-medium"
+              className={`${
+                saveNoteMutation.isPending
+                  ? "bg-blue-800 cursor-not-allowed"
+                  : "bg-blue-500 hover:bg-blue-600"
+              } text-white border-none px-5 py-2 rounded-xl font-medium`}
               onClick={handleSave}
+              disabled={isProcessing}
             />
           </div>
         </div>
 
         {/* Glass Card */}
-        <div className="bg-[#1b2743]/70 backdrop-blur-xl rounded-3xl p-8 shadow-lg border border-white/10 transition-all duration-300 hover:shadow-blue-500/10">
-          <h2 className="text-xl text-center block lg:hidden md:hidden mb-2 font-semibold tracking-wide ">
-            📝 Create a New Note
+        <div
+          className={`bg-[#1b2743]/70 backdrop-blur-xl rounded-3xl p-8 shadow-lg border border-white/10 transition-all duration-500 ${
+            isProcessing ? "opacity-70" : "opacity-100"
+          }`}
+        >
+          <h2 className="text-xl text-center lg:hidden md:hidden mb-2 font-semibold tracking-wide flex items-center justify-center gap-2">
+            <FileText className="w-5 h-5" />
+            Create a New Note
           </h2>
 
           {/* Title + Category */}
@@ -131,14 +172,14 @@ export const NewNote: React.FC = () => {
                 placeholder="Select category"
                 appendTo={document.body}
                 className="w-full bg-[#141c2f] p-2 text-white border border-gray-700 rounded-xl"
-                panelClassName="bg-[#1e253b] text-white p-2 space-y-2"
+                panelClassName="bg-[#1e253b] text-white p-2 z-50"
               />
             </div>
           </div>
 
-          {/* Main Content + AI Tools */}
+          {/* Main Content */}
           <div className="flex flex-col md:flex-row gap-8">
-            {/* Textarea */}
+           
             <div className="flex-1">
               <label className="block text-sm text-gray-400 mb-2">Content</label>
               <InputTextarea
@@ -156,21 +197,22 @@ export const NewNote: React.FC = () => {
               <Button
                 label={suggestTitleMutation.isPending ? "🤔 Thinking..." : "⚡ AI Suggest Title"}
                 onClick={() => content.trim() && suggestTitleMutation.mutate()}
-                disabled={isLoading || !content.trim()}
+                disabled={isProcessing || !content.trim()}
                 className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-none px-5 py-2 rounded-xl hover:opacity-90"
               />
               <Button
                 label={summarizeMutation.isPending ? "🧠 Summarizing..." : "🧩 Summarize Note"}
                 onClick={() => content.trim() && summarizeMutation.mutate()}
-                disabled={isLoading || !content.trim()}
+                disabled={isProcessing || !content.trim()}
                 className="bg-indigo-700 text-white border-none px-5 py-2 rounded-xl hover:bg-indigo-600"
               />
-              {isLoading && <Loader2 className="animate-spin text-gray-400 ml-2 self-center" />}
+              {isProcessing && <Loader2 className="animate-spin text-gray-400 ml-2 self-center" />}
+            </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+   
   );
 };
 

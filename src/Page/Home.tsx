@@ -4,7 +4,7 @@ import { Card } from "primereact/card"
 import "aos/dist/aos.css"
 import AOS from "aos"
 
-// Lucide Icons import
+
 import { Brain, FileText, Sparkles, Download } from "lucide-react"
 import { Link } from "react-router"
 
