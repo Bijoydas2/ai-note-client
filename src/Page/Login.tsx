@@ -39,7 +39,7 @@ export const LoginPage: React.FC = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0f1724] px-4">
-      
+      <title>Login</title>
       <div className="w-full max-w-md bg-[#101b29] rounded-2xl shadow-lg p-8">
         {/* Logo */}
         <div className="flex items-center justify-center mb-6 gap-2">

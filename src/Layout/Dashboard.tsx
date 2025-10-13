@@ -84,6 +84,7 @@ export const Dashboard: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#0f1724] text-white">
+      <title>Note Dashboard</title>
       {/* Navbar */}
       <div className="sticky top-0 z-50">
         <Navbar search={search} onSearch={setSearch} onToggleDark={() => setDark((s) => !s)} dark={dark} />

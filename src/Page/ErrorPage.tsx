@@ -21,6 +21,7 @@ const ErrorPage: React.FC<Props> = ({ message, code }) => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-[#0e1420] text-white px-4">
+      <title>Error Page</title>
       <AlertTriangle className="h-16 w-16 text-red-500 mb-6" />
       <h1 className="text-4xl sm:text-6xl font-bold mb-2">{displayTitle}</h1>
       <p className="text-gray-300 mb-6 text-center">{displayMessage}</p>

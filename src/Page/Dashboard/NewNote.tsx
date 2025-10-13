@@ -110,6 +110,7 @@ export const NewNote: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0e1420] to-[#111b2e] text-white px-6 py-8 flex justify-center transition-opacity duration-500">
+      <title>Add New Note</title>
       <div className="w-full max-w-6xl">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">

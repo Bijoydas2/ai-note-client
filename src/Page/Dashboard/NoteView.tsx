@@ -42,7 +42,7 @@ export const NoteView: React.FC = () => {
     enabled: !!user,
   });
 
-  if (isLoading) return <Loading message="Loading note..."/>;
+  if (isLoading) return <Loading message="Loading ....."/>;
   if (isError || !note) return <ErrorPage message="Note not found."/>;
 
   // PDF Download function
@@ -82,6 +82,7 @@ export const NoteView: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#0b1220] text-white p-6 sm:p-10">
+      <title>Note View</title>
       {/* Header */}
       <div className="flex justify-between items-start mb-6">
         <div>
