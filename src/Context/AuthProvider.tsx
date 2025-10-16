@@ -16,7 +16,9 @@ import {
   onAuthStateChanged,
   User,
 } from "firebase/auth";
-import app from "../firebase/firebase.config";
+import app from "../Firebase/firebase.config";
+
+
 
 // Type definition for the context
 interface AuthContextType {

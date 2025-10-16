@@ -140,7 +140,7 @@ export const NoteCard: React.FC<Props> = ({
       {filteredNotes.map((note) => (
         <div
           key={note._id}
-          className="relative bg-[#0b1220] text-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-transform transform hover:scale-[1.03] border border-[#122036]
+          className="relative bg-[#0b1220]  text-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-transform transform hover:scale-[1.03] border border-[#122036]
           flex flex-col justify-between h-[350px]" 
         >
           {/* Header */}
