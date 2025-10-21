@@ -1,12 +1,80 @@
-# React + Vite
+# 🧠 AI-Powered Note App (MERN + Gemini)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern note-taking web app that helps users write, organize, and summarize their thoughts effortlessly — powered by **Google Gemini AI**.  
+Built with **MERN Stack**, this app combines simplicity, productivity, and intelligence.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Live Demo  
+🔗 [Live Site](https://ai-notes-client.vercel.app)  
+📁 [Frontend Repo](https://github.com/Bijoydas2/ai-note-client)  
+📁 [Backend Repo](https://github.com/Bijoydas2/ai-note-server)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 📸 Screenshots
+
+| Dashboard | Note Editor | AI Summary |
+|------------|--------------|-------------|
+| ![Dashboard Screenshot](https://i.ibb.co.com/nsWPxfRt/Screenshot-2025-10-13-220059.png) | ![Note Editor](https://i.ibb.co.com/HTcDt36k/Screenshot-2025-10-12-072426.png) | ![AI Summary](https://i.ibb.co.com/zh1qTDXp/Screenshot-2025-10-12-072441.png) |
+
+---
+
+## 📋 Project Overview
+
+**AI-Powered Note App** allows users to:
+- ✍️ Create, edit, and delete notes  
+- 🧩 Organize notes by category  
+- 🔍 Search notes easily  
+- 🤖 Generate AI summaries and title suggestions using **Gemini API**  
+- 📤 Export notes as PDF or Markdown  
+
+---
+
+## 🎯 Goals
+
+Make note-taking smarter and faster by integrating **AI-generated summaries and insights** into a simple, user-friendly interface.
+
+---
+
+## ✅ Core Features
+
+| Feature | Description |
+|----------|--------------|
+| **Create / Edit / Delete Notes** | Manage notes with title and content (Markdown supported) |
+| **AI Summarization** | Get instant summaries with Gemini AI |
+| **AI Title Suggestion** | Generate smart titles for your notes |
+| **Categorization** | Group notes by custom categories |
+| **Search & Filter** | Find notes by keyword or category |
+| **Export Notes** | Download notes as PDF or Markdown |
+
+---
+
+## 🧱 Tech Stack
+
+**Frontend:**
+- React.js  
+- Tailwind CSS  
+
+**Backend:**
+- Node.js  
+- Express.js  
+
+**Database:**
+- MongoDB  
+
+**AI Integration:**
+- Google Gemini API  
+
+**Exporting:**
+- jsPDF (for PDF export)  
+- Native file download for `.md`  
+
+---
+
+## ⚙️ Installation & Setup
+
+### 1️⃣ Clone the Repositories
+```bash
+git clone https://github.com/your-username/ai-note-frontend.git
+git clone https://github.com/your-username/ai-note-backend.git
