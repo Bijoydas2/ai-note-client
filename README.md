@@ -54,7 +54,9 @@ Make note-taking smarter and faster by integrating **AI-generated summaries and 
 
 **Frontend:**
 - React.js  
+- Typescript  
 - Tailwind CSS  
+- Prime React
 
 **Backend:**
 - Node.js  
