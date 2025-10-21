@@ -14,7 +14,7 @@ Built with **MERN Stack**, this app combines simplicity, productivity, and intel
 
 ## 📸 Demo 
 
-| Dashboard | Note Editor | AI Summary |
+| Home | Dashboard |  Add Note help AI |
 |------------|--------------|-------------|
 | ![Home Page](https://i.ibb.co.com/nsWPxfRt/Screenshot-2025-10-13-220059.png) | ![Dashboard](https://i.ibb.co.com/HTcDt36k/Screenshot-2025-10-12-072426.png) | ![Add Note and help ai](https://i.ibb.co.com/zh1qTDXp/Screenshot-2025-10-12-072441.png) |
 
