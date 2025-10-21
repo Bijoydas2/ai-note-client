@@ -12,11 +12,11 @@ Built with **MERN Stack**, this app combines simplicity, productivity, and intel
 
 ---
 
-## 📸 Screenshots
+## 📸 Demo 
 
 | Dashboard | Note Editor | AI Summary |
 |------------|--------------|-------------|
-| ![Dashboard Screenshot](https://i.ibb.co.com/nsWPxfRt/Screenshot-2025-10-13-220059.png) | ![Note Editor](https://i.ibb.co.com/HTcDt36k/Screenshot-2025-10-12-072426.png) | ![AI Summary](https://i.ibb.co.com/zh1qTDXp/Screenshot-2025-10-12-072441.png) |
+| ![Home Page](https://i.ibb.co.com/nsWPxfRt/Screenshot-2025-10-13-220059.png) | ![Dashboard](https://i.ibb.co.com/HTcDt36k/Screenshot-2025-10-12-072426.png) | ![Add Note and help ai](https://i.ibb.co.com/zh1qTDXp/Screenshot-2025-10-12-072441.png) |
 
 ---
 
@@ -76,5 +76,6 @@ Make note-taking smarter and faster by integrating **AI-generated summaries and 
 
 ### 1️⃣ Clone the Repositories
 ```bash
-git clone https://github.com/your-username/ai-note-frontend.git
-git clone https://github.com/your-username/ai-note-backend.git
+git clone https://github.com/Bijoydas2/ai-note-client
+git clone https://github.com/Bijoydas2/ai-note-server
+
